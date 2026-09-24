@@ -72,3 +72,30 @@ The resulting embedding matrix has shape:
 The attention matrix has shape:
 
 (6, 6), since every token can attend to every token.
+
+
+## Day 4 - Scaled Dot-Product Attention
+
+Implemented scaled dot-product attention from scratch using PyTorch.
+
+The implementation follows:
+
+Attention(Q,K,V) =
+softmax(QK^T / sqrt(d_k))V
+
+Steps implemented:
+
+1. Calculate QK^T
+2. Scale scores by sqrt(d_k)
+3. Apply softmax
+4. Multiply attention weights by V
+5. Generate the final attention output
+
+### Key Concepts
+
+- Query-Key similarity
+- Attention scores
+- Scaling
+- Softmax
+- Attention weights
+- Weighted value aggregation

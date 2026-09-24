@@ -1,51 +1,79 @@
 import torch
-import math
 
-
-def scaled_dot_product_attention(Q, K, V):
-
-    dk = K.size(-1)
-
-#calculate the simialrity between query and keys
-    scores = Q @ K.T
-
-#scale scores to prevent extreme values and improve numerical stability
-    scaled_scores = scores / math.sqrt(dk)
-
-#convert scores to attention weights
-    attention_weights = torch.softmax(scaled_scores, dim=-1)
-
-#create weighted combinations of values based on attention weights
-    output = attention_weights @ V
-
-    return output, attention_weights
-
+# -------------------------
+# 1. Define Q, K and V
+# -------------------------
 
 Q = torch.tensor([
-    [1.0, 0.0],
-    [0.0, 1.0]
-    ])
+    [1.0, 0.0, 1.0],
+    [0.0, 1.0, 0.0],
+    [1.0, 1.0, 0.0]
+])
 
 K = torch.tensor([
-    [1.0, 0.0],
-    [0.0, 1.0]
-    ])
+    [1.0, 0.0, 1.0],
+    [0.0, 1.0, 0.0],
+    [1.0, 1.0, 0.0]
+])
 
 V = torch.tensor([
-    [100.0, 0.0],
-    [0.0, 20.0]
-    ])  
+    [10.0, 0.0],
+    [0.0, 10.0],
+    [5.0, 5.0]
+])
 
-output, weights = scaled_dot_product_attention(Q, K, V)
+print("Q:")
+print(Q)
 
-print("Attention weights :")
-print(weights)
+print("\nK:")
+print(K)
+
+print("\nV:")
+print(V)
+
+
+# -------------------------
+# 2. Calculate QK^T
+# -------------------------
+
+scores = Q @ K.T
+
+print("\nQK^T:")
+print(scores)
+
+
+# -------------------------
+# 3. Scale scores
+# -------------------------
+
+d_k = K.shape[-1]
+
+scaled_scores = scores / torch.sqrt(
+    torch.tensor(d_k, dtype=torch.float32)
+)
+
+print("\nScaled scores:")
+print(scaled_scores)
+
+
+# -------------------------
+# 4. Softmax
+# -------------------------
+
+attention_weights = torch.softmax(
+    scaled_scores,
+    dim=-1
+)
+
+print("\nAttention weights:")
+print(attention_weights)
+
+
+# -------------------------
+# 5. Calculate attention output
+# -------------------------
+
+output = attention_weights @ V
 
 print("\nAttention output:")
 print(output)
-
-
-
-
-
-    
