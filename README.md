@@ -99,3 +99,32 @@ Steps implemented:
 - Softmax
 - Attention weights
 - Weighted value aggregation
+
+## Day 5 - Multi-Head Attention
+
+Implemented Multi-Head Attention from scratch using PyTorch.
+
+### Concepts learned
+
+- Multiple attention heads
+- Q, K, V projections
+- Splitting embeddings into attention heads
+- Scaled dot-product attention
+- Concatenating attention heads
+- Output projection
+- Tensor shape manipulation
+
+### Example
+
+d_model = 8
+num_heads = 2
+head_dim = 4
+
+Input shape:
+(1, 4, 8)
+
+Attention weights:
+(1, 2, 4, 4)
+
+Output shape:
+(1, 4, 8)
