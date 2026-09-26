@@ -128,3 +128,80 @@ Attention weights:
 
 Output shape:
 (1, 4, 8)
+**## Day 6 - Positional Encoding + Hugging Face Introduction**
+
+Today I learned how Transformers handle token position and explored pretrained Transformer models using Hugging Face.
+
+**### Concepts learned**
+
+- Why positional information is needed in Transformers
+
+- Sinusoidal positional encoding
+
+- Adding positional encoding to token embeddings
+
+- Hugging Face Transformers library
+
+- Tokenization using `AutoTokenizer`
+
+- Token IDs and attention masks
+
+- Loading pretrained BERT using `AutoModel`
+
+- Understanding Transformer hidden states
+
+**### Positional Encoding**
+
+Implemented sinusoidal positional encoding from scratch using PyTorch.
+
+Positional encoding adds information about the position of each token because self-attention itself does not inherently know token order.
+
+The positional encoding is added to the token embeddings:
+
+```text
+Token Embeddings
+       +
+Positional Encoding
+       ↓
+Position-Aware Representations
+```
+
+**### Hugging Face**
+
+Used Hugging Face Transformers to tokenize text and load a pretrained BERT model.
+
+Example:
+
+```text
+Text
+ ↓
+Tokenizer
+ ↓
+Tokens
+ ↓
+Token IDs
+ ↓
+BERT
+ ↓
+Hidden States
+```
+
+**### Example**
+
+Input:
+
+`"I am learning transformers."`
+
+BERT tokenizer produces subword tokens such as:
+
+```text
+['i', 'am', 'learning', 'trans', '##of', '##rm', '##ers', '.']
+```
+
+The tokenizer then converts these tokens into numerical token IDs.
+
+The encoded input also contains an attention mask indicating which tokens should be considered by the model.
+
+**### Key Connection**
+
+The from-scratch implementation helps understand how attention works internally, while Hugging Face provides pretrained Transformer models that can be used directly for real-world NLP tasks.
