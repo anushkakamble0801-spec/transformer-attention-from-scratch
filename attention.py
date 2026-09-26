@@ -1,79 +1,117 @@
 import torch
-
-# -------------------------
-# 1. Define Q, K and V
-# -------------------------
-
-Q = torch.tensor([
-    [1.0, 0.0, 1.0],
-    [0.0, 1.0, 0.0],
-    [1.0, 1.0, 0.0]
-])
-
-K = torch.tensor([
-    [1.0, 0.0, 1.0],
-    [0.0, 1.0, 0.0],
-    [1.0, 1.0, 0.0]
-])
-
-V = torch.tensor([
-    [10.0, 0.0],
-    [0.0, 10.0],
-    [5.0, 5.0]
-])
-
-print("Q:")
-print(Q)
-
-print("\nK:")
-print(K)
-
-print("\nV:")
-print(V)
+import torch.nn as nn
+import math
 
 
-# -------------------------
-# 2. Calculate QK^T
-# -------------------------
+class MultiHeadAttention(nn.Module):
 
-scores = Q @ K.T
+    def __init__(self, d_model, num_heads):
+        super().__init__()
 
-print("\nQK^T:")
-print(scores)
+        assert d_model % num_heads == 0
+
+        self.d_model = d_model
+        self.num_heads = num_heads
+        self.head_dim = d_model // num_heads
+
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_k = nn.Linear(d_model, d_model)
+        self.W_v = nn.Linear(d_model, d_model)
+
+        self.W_o = nn.Linear(d_model, d_model)
+
+    def forward(self, x):
+
+        batch_size, seq_len, _ = x.size()
+
+        Q = self.W_q(x)
+        K = self.W_k(x)
+        V = self.W_v(x)
+
+        Q = Q.view(
+            batch_size,
+            seq_len,
+            self.num_heads,
+            self.head_dim
+        ).transpose(1, 2)
+
+        K = K.view(
+            batch_size,
+            seq_len,
+            self.num_heads,
+            self.head_dim
+        ).transpose(1, 2)
+
+        V = V.view(
+            batch_size,
+            seq_len,
+            self.num_heads,
+            self.head_dim
+        ).transpose(1, 2)
+
+        scores = torch.matmul(
+            Q,
+            K.transpose(-2, -1)
+        )
+
+        scores = scores / math.sqrt(self.head_dim)
+
+        attention_weights = torch.softmax(
+            scores,
+            dim=-1
+        )
+
+        output = torch.matmul(
+            attention_weights,
+            V
+        )
+
+        output = output.transpose(
+            1, 2
+        ).contiguous()
+
+        output = output.view(
+            batch_size,
+            seq_len,
+            self.d_model
+        )
+
+        output = self.W_o(output)
+
+        return output, attention_weights
 
 
-# -------------------------
-# 3. Scale scores
-# -------------------------
+if __name__ == "__main__":
 
-d_k = K.shape[-1]
+    torch.manual_seed(42)
 
-scaled_scores = scores / torch.sqrt(
-    torch.tensor(d_k, dtype=torch.float32)
-)
+    batch_size = 1
+    seq_len = 4
+    d_model = 8
+    num_heads = 2
 
-print("\nScaled scores:")
-print(scaled_scores)
+    x = torch.randn(
+        batch_size,
+        seq_len,
+        d_model
+    )
 
+    model = MultiHeadAttention(
+        d_model=d_model,
+        num_heads=num_heads
+    )
 
-# -------------------------
-# 4. Softmax
-# -------------------------
+    output, attention_weights = model(x)
 
-attention_weights = torch.softmax(
-    scaled_scores,
-    dim=-1
-)
+    print("Input shape:", x.shape)
+    print("Output shape:", output.shape)
+    print("Attention weights shape:", attention_weights.shape)
 
-print("\nAttention weights:")
-print(attention_weights)
+    print("\nAttention weight sums:")
+    print(attention_weights.sum(dim=-1))
 
+    print("\nHead 1 attention:")
+    print(attention_weights[0, 0])
 
-# -------------------------
-# 5. Calculate attention output
-# -------------------------
-
-output = attention_weights @ V
-
-print("\nAttention output:")
-print(output)
+    print("\nHead 2 attention:")
+    print(attention_weights[0, 1])
