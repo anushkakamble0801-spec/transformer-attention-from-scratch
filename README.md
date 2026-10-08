@@ -235,3 +235,34 @@ Created `model_intro.py` to:
 The project is progressing from implementing attention from scratch to understanding how attention is used inside a complete pretrained Transformer.
 
 Text → Tokenizer → Input IDs → Embeddings → Self-Attention → Transformer Layers → Contextual Representations
+
+## Day 7 — Visualizing Transformer Attention
+
+### What I Learned
+
+* Understood attention weights in a real Transformer.
+* Learned about multi-head self-attention.
+* Learned how to extract attention weights from a pretrained BERT model.
+* Understood the attention tensor shape `[batch_size, num_heads, sequence_length, sequence_length]`.
+* Extracted individual attention heads and layers.
+* Visualized attention weights using heatmaps.
+* Compared attention patterns across different heads and Transformer layers.
+* Connected real BERT attention back to the scaled dot-product attention implemented from scratch.
+
+### Practical Work
+
+Created `attention_visualization.py` to:
+
+1. Load the BERT tokenizer.
+2. Load BERT with attention outputs enabled.
+3. Tokenize an input sentence.
+4. Extract attention weights.
+5. Select individual attention heads.
+6. Visualize attention matrices as heatmaps.
+7. Experiment with different layers, heads, and input sentences.
+
+### Key Concept
+
+A Transformer uses multi-head self-attention to allow tokens to interact with other tokens in the sequence. The attention weights produced by these heads can be visualized as matrices showing how attention is distributed between tokens.
+
+Text → Tokenizer → Input IDs → Transformer → Multi-Head Self-Attention → Attention Weights → Contextual Representations
