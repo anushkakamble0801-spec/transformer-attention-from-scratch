@@ -205,3 +205,33 @@ The encoded input also contains an attention mask indicating which tokens should
 **### Key Connection**
 
 The from-scratch implementation helps understand how attention works internally, while Hugging Face provides pretrained Transformer models that can be used directly for real-world NLP tasks.
+
+## Day 6 — Hugging Face Pretrained Transformer
+
+### What I Learned
+
+* Understood the difference between a tokenizer and a Transformer model.
+* Learned how text is converted into tokens and input IDs.
+* Learned about attention masks.
+* Loaded a pretrained BERT model using Hugging Face Transformers.
+* Passed tokenized text through the pretrained model.
+* Explored the `last_hidden_state` output.
+* Understood the shape `[batch_size, sequence_length, hidden_size]`.
+* Connected pretrained Transformer outputs with the attention concepts implemented from scratch.
+
+### Practical Work
+
+Created `model_intro.py` to:
+
+1. Load the BERT tokenizer.
+2. Load the pretrained BERT model.
+3. Tokenize input text.
+4. Generate input IDs and attention masks.
+5. Pass the input through the Transformer.
+6. Inspect the shape of the final hidden representations.
+
+### Key Concept
+
+The project is progressing from implementing attention from scratch to understanding how attention is used inside a complete pretrained Transformer.
+
+Text → Tokenizer → Input IDs → Embeddings → Self-Attention → Transformer Layers → Contextual Representations
